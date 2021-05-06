@@ -1,0 +1,368 @@
+package e.kcci.a180323_matchingcard;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.view.MotionEvent;
+import android.view.View;
+
+/**
+ * Created by KCCI on 2018-03-23.
+ */
+//public protect private 접근제한자에 보통 return타입(없으면 void)가 있다.
+
+
+
+public class CardGameView extends View { //view content로 쓴다.
+
+    Bitmap m_Background; //m은 member변수
+    Bitmap m_CardBackside;
+    Bitmap m_CardRed;
+    Bitmap m_CardBlue;
+    Bitmap m_CardGreen;
+    int x_padding = 100;
+    int y_padding = 300;
+
+    Card m_Shuffle[][]; //3x2 이중배열로 만든다.
+    Card m_SelectedCard_1,m_SelectedCard_2;
+
+    int m_column,m_row;
+    public static final int STATE_READY = 0;
+    public static final int STATE_GAME = 1;
+    public static final int STATE_END = 2;
+
+
+
+    int m_state = STATE_READY;
+
+//클래스에는 생성자가 있어야 한다.
+    public CardGameView(Context context){
+        super(context);
+        m_Background = BitmapFactory.decodeResource(getResources(),R.mipmap.background);
+        m_CardBackside = BitmapFactory.decodeResource(getResources(),R.mipmap.backside);
+        m_CardBlue = BitmapFactory.decodeResource(getResources(),R.mipmap.front_blue);
+        m_CardGreen = BitmapFactory.decodeResource(getResources(),R.mipmap.front_green);
+        m_CardRed = BitmapFactory.decodeResource(getResources(),R.mipmap.front_red);
+        m_column = 3;
+        m_row = 2;
+        m_Shuffle = new Card[m_column][m_row];  //3x2배열 만듦
+
+        Card_Shuffle(m_column,m_row);
+        cardgamethread _thread = new cardgamethread(this);//thread자체를 호출(this)
+        _thread.start();//thread 동작하게 start해준다.
+
+
+    }
+
+    void Card_Shuffle(int column,int row){
+
+        for(int y=0; y<row;y++){
+            for(int x=0; x<column;x++){
+                m_Shuffle[x][y] = new Card((y*column+x)/2);
+                //012 두개씩 순서대로 나오게 2로 나눠줌
+
+            }
+
+        }
+        //카드석는부분
+        for(int i=0;i<300;i++) {
+            int x = (int) (Math.random() * column);
+            int y = (int) (Math.random() * row);
+
+            m_SelectedCard_1 = m_Shuffle[x][y];
+            x = (int) (Math.random() * column);
+            y = (int) (Math.random() * row);
+            m_SelectedCard_2 = m_Shuffle[x][y];
+            int temp = m_SelectedCard_1.m_Image;
+            m_SelectedCard_1.m_Image = m_SelectedCard_2.m_Image;
+            m_SelectedCard_2.m_Image = temp;
+        }
+        m_SelectedCard_1 = null;
+        m_SelectedCard_2 = null;
+
+    }
+
+
+
+/*
+    private  int m_x;
+    private  int m_y;
+    private  String m_strAction = ""; //초기화
+*/
+
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+//view는 ondraw함수가 있어야한다.
+
+        canvas.drawBitmap(m_Background,0,0,null);
+        if (m_state==STATE_READY){
+
+            All_Card_View(canvas);
+
+
+
+        }
+        else if(m_state==STATE_GAME){
+            for(int y=0;y<m_row;y++){
+                for(int x=0;x<m_column;x++) {
+                    if (m_Shuffle[x][y].m_state == Card.CARD_CLOSE) {
+                        View_Backside_Image(canvas, x, y);
+
+
+                    }
+                   /* else if (m_Shuffle[x][y].m_state == Card.CARD_PLAYOPEN) {
+
+                        View_Front_Image(canvas, x, y);
+                    }
+                    else if (m_Shuffle[x][y].m_state == Card.CARD_MATCH){
+
+                        View_Front_Image(canvas, x, y);
+
+                    }*/
+
+                    else{ View_Front_Image(canvas, x,y);}
+
+
+
+
+
+                }
+
+            }
+
+        
+
+
+        }   
+        else {   //게임 end일때
+            m_row = 4;
+            m_column =4;
+            Card_Shuffle(m_column,m_row);
+            m_state = STATE_READY;
+            
+            
+        }
+        invalidate();
+        return;
+        /*Paint pRed = new Paint(); //p라는 paint 클라스만든다.
+        Paint pBlue = new Paint();
+        pRed.setTextSize(35);
+        pBlue.setTextSize(35);
+        pRed.setColor(Color.RED);
+        pBlue.setColor(Color.BLUE);
+
+        canvas.drawText("cordinate "+ m_x+ ", "+m_y,10,50, pRed); //x좌표 10 y좌표 20
+        canvas.drawText("Event Action : "+m_strAction, 10,100,pBlue);
+        //event action은 터치하면 action down, 터치를 떄면 action up, 터치시에 움직이면 action move
+        */
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        int px = (int)event.getX();
+        int py = (int)event.getY();
+
+        if(m_state == STATE_READY){  //m_state는 게임의 상태
+            m_state = STATE_GAME;
+            for(int y = 0; y<m_row;y++){
+                for(int x=0; x<m_column;x++){
+
+
+                    m_Shuffle[x][y].m_state = Card.CARD_CLOSE;
+
+                }
+
+            }
+
+        }
+
+
+        else if(m_state == STATE_GAME){
+            for(int y = 0; y<m_row;y++){
+                for(int x=0; x<m_column;x++){
+//rect함수는 좌표 2개를 지정해주면 사각형을 그린다.
+                    Rect box_card =new Rect( x * 140 + x_padding, y * 180 + y_padding,
+                            x * 140 + x_padding+90, y * 180 + y_padding+130);
+
+
+
+
+                    if(box_card.contains(px,py)){
+                        if(m_Shuffle[x][y].m_state !=Card.CARD_MATCH&&
+                                m_Shuffle[x][y].m_state !=Card.CARD_PLAYOPEN){
+                            m_Shuffle[x][y].m_state = Card.CARD_PLAYOPEN;
+                            if(m_SelectedCard_1==null){
+
+                                m_SelectedCard_1 = m_Shuffle[x][y];
+                            }
+                            else if(m_SelectedCard_2==null){
+                                m_SelectedCard_2 = m_Shuffle[x][y];
+
+                            }
+
+
+
+                        }
+
+
+                        //랜덤하게 카드 셔플
+
+
+                    }
+                }
+
+            }
+
+
+        /*  if(m_SelectedCard_1==null || m_SelectedCard_2 == null){
+
+
+          }
+
+          else if(m_SelectedCard_1.m_Image == m_SelectedCard_2.m_Image){
+                m_SelectedCard_1.m_state = Card.CARD_MATCH;
+                m_SelectedCard_2.m_state = Card.CARD_MATCH;
+
+
+          }
+
+          else{
+              m_SelectedCard_1.m_state = Card.CARD_CLOSE;
+              m_SelectedCard_2.m_state = Card.CARD_CLOSE;
+
+
+          }*/
+
+         /*   m_x = (int)event.getX();
+            m_y = (int)event.getY();
+            if(event.getAction() == MotionEvent.ACTION_DOWN){
+                m_strAction = "Action down";
+                //action_down은 상수다.
+            }
+            else if(event.getAction() == MotionEvent.ACTION_MOVE){
+                m_strAction = "Action move";
+
+            }
+
+            else if(event.getAction() == MotionEvent.ACTION_UP){
+                m_strAction = "Action up";
+
+            }*/
+
+
+        }
+        invalidate();//안드로이드에게 화면을 호출하게 닥달하는것
+        return super.onTouchEvent(event); //빠른시간 두번터치를 하는것을 방지
+                //getX는 X좌표값을 가져온다.
+    }
+
+
+
+
+    public void All_Card_View(Canvas canvas){
+        for(int y = 0; y<m_row;y++) {
+            for (int x = 0; x < m_column; x++) {
+                View_Front_Image(canvas,x,y);
+            }
+        }
+    return;
+    }
+
+
+    public void View_Front_Image (Canvas canvas, int x,int y) {
+
+
+        switch (m_Shuffle[x][y].m_Image) {
+            case Card.IMG_BLUE:
+                canvas.drawBitmap(m_CardBlue, x * 140 + x_padding, y * 180 + y_padding, null);
+                break;
+            case Card.IMG_GREEN:
+                canvas.drawBitmap(m_CardGreen, x * 140 + x_padding, y * 180 + y_padding, null);
+                break;
+            case Card.IMG_RED:
+                canvas.drawBitmap(m_CardRed, x * 140 + x_padding, y * 180 + y_padding, null);
+                break;
+
+        }
+    return;
+    }
+    public void View_Backside_Image (Canvas canvas, int x,int y){
+          canvas. drawBitmap(m_CardBackside, x*140+x_padding,y*180+y_padding, null);
+
+
+    return;
+
+
+    }
+
+    public void checkMatch(){
+
+        if(m_SelectedCard_1 !=null && m_SelectedCard_2 !=null){
+
+            if(m_SelectedCard_1.m_Image==m_SelectedCard_2.m_Image){
+                m_SelectedCard_1.m_state = Card.CARD_MATCH;
+
+                m_SelectedCard_2.m_state = Card.CARD_MATCH;
+                m_SelectedCard_2=null;
+                m_SelectedCard_1=null;
+                for(int y=0;y<m_row;y++){
+                    for(int x=0;x<m_column;x++){
+                       if( m_Shuffle[x][y].m_state  !=Card.CARD_MATCH ){
+                           postInvalidate();
+                           return;
+                           //return이 안되면 (카드상태가 매치가 아닌경우가 없을때 = 모든카드 매치상태) for문 빠져나올것이다.
+                       }
+
+
+
+                    }
+
+
+                }
+            m_state = STATE_END;
+            }
+            else{  //try catch는 에러처리. sleep을 쓰면 자동으로 써줘야한다.(예외처리)
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                m_SelectedCard_1.m_state = Card.CARD_CLOSE;
+
+                m_SelectedCard_2.m_state = Card.CARD_CLOSE;
+                m_SelectedCard_2=null;
+                m_SelectedCard_1=null;
+            }
+            postInvalidate();
+            //thread의 invalidate를 써줘야해서 post써야함
+
+        }
+        return;
+    }
+
+
+/*
+    public void View_Backside_Image (Canvas canvas, int x,int y){
+        canvas. drawBitmap(m_Cardvalid,null ,null, null);
+
+
+
+        return;
+
+
+    }
+*/
+
+
+}
+
+
+//2탄만들기
+//이미지 8개 찾고 bitmap 추가 shuffle 배열이 2x3으로 고정되어있는거 수정
+//baby kei jin jungyein leemiju
+//수정 서지수 유지애 안나옴

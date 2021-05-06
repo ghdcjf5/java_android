@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_launcher_background"
+    tools:context="e.kcci.calculator.MainActivity"
+    tools:layout_editor_absoluteY="81dp">
+
+    <LinearLayout
+        android:layout_width="368dp"
+        android:layout_height="495dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="8dp">
+
+        <TextView
+            android:id="@+id/tv_result"
+            android:layout_width="match_parent"
+            android:layout_height="73dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="@android:color/background_light"
+            android:gravity="bottom|right"
+            android:text="0"
+            android:textSize="36sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="5dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btn_num7"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginVertical="5dp"
+                android:layout_weight="1"
+                android:background="@android:color/background_light"
+                app:srcCompat="@mipmap/img_number7" />
+
+            <ImageButton
+                android:id="@+id/btn_num8"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginVertical="5dp"
+                android:layout_weight="1"
+                android:background="@android:color/background_light"
+                app:srcCompat="@mipmap/img_number8" />
+
+            <ImageButton
+                android:id="@+id/btn_num9"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginVertical="5dp"
+                android:layout_weight="1"
+                android:background="@android:color/background_light"
+                app:srcCompat="@mipmap/img_number9" />
+
+            <ImageButton
+                android:id="@+id/btn_plus"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginVertical="5dp"
+                android:layout_weight="1"
+                android:background="@android:color/background_light"
+                app:srcCompat="@mipmap/img_op_plus" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="5dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btn_num4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginVertical="5dp"
+                android:layout_weight="1"
+                android:background="@android:color/background_light"
+                app:srcCompat="@mipmap/img_number4" />
+
+            <ImageButton
+                android:id="@+id/btn_num5"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginVertical="5dp"
+                android:layout_weight="1"
+                android:background="@android:color/background_light"
+                app:srcCompat="@mipmap/img_number5" />
+
+            <ImageButton
+                android:id="@+id/btn_num6"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginVertical="5dp"
+                android:layout_weight="1"
+                android:background="@android:color/background_light"
+                app:srcCompat="@mipmap/img_number6" />
+
+            <ImageButton
+                android:id="@+id/btn_sub"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginVertical="5dp"
+                android:layout_weight="1"
+                android:background="@android:color/background_light"
+                app:srcCompat="@mipmap/img_op_sub" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="5dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btn_num1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginVertical="5dp"
+                android:layout_weight="1"
+                android:background="@android:color/background_light"
+                app:srcCompat="@mipmap/img_number1" />
+
+            <ImageButton
+                android:id="@+id/btn_num2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginVertical="5dp"
+                android:layout_weight="1"
+                android:background="@android:color/background_light"
+                app:srcCompat="@mipmap/img_number2" />
+
+            <ImageButton
+                android:id="@+id/btn_num3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginVertical="5dp"
+                android:layout_weight="1"
+                android:background="@android:color/background_light"
+                app:srcCompat="@mipmap/img_number3" />
+
+            <ImageButton
+                android:id="@+id/btn_mul"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginVertical="5dp"
+                android:layout_weight="1"
+                android:background="@android:color/background_light"
+                app:srcCompat="@mipmap/img_op_mul" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="5dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btn_num0"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginVertical="5dp"
+                android:layout_weight="1"
+                android:background="@android:color/background_light"
+                app:srcCompat="@mipmap/img_number0" />
+
+            <ImageButton
+                android:id="@+id/btn_clear"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginVertical="5dp"
+                android:layout_weight="1"
+                android:background="@android:color/background_light"
+                app:srcCompat="@mipmap/img_op_clear" />
+
+            <ImageButton
+                android:id="@+id/btn_op"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginVertical="5dp"
+                android:layout_weight="1"
+                android:background="@android:color/background_light"
+                app:srcCompat="@mipmap/img_op_op" />
+
+            <ImageButton
+                android:id="@+id/btn_div"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginVertical="5dp"
+                android:layout_weight="1"
+                android:background="@android:color/background_light"
+                app:srcCompat="@mipmap/img_op_div" />
+        </LinearLayout>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
